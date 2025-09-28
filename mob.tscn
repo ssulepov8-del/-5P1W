@@ -1,0 +1,115 @@
+[gd_scene load_steps=6 format=3 uid="uid://cco6c1somi3xv"]
+
+[ext_resource type="Texture2D" uid="uid://upfg1p2qpeix" path="res://4d78dd9f5d19ec17b6c7fba6fc101888-no-bg-preview (carve.photos).png" id="1_dy6sc"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_nokgg"]
+radius = 6.0
+height = 40.0
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_ubaqv"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("1_dy6sc")
+}],
+"loop": true,
+"name": &"idle",
+"speed": 5.0
+}]
+
+[sub_resource type="GDScript" id="GDScript_dy6sc"]
+script/source = "extends Area2D
+
+@export var dialog_lines: Array[String] = [
+	\"Я был за стойкой весь вечер с 6 до полуночи\",
+	\"Заказы видели все\",
+	\"Никакого отношения к девочке я не имею\",
+	\"До свидания\"
+]
+
+var player_in_range = false
+var dialog_started = false
+
+@onready var interaction_label = $InteractionLabel
+
+func _ready():
+	
+	if not has_node(\"InteractionLabel\"):
+		var label = Label.new()
+		label.text = \"Нажми E\"
+		label.position = Vector2(0, -50)
+		label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		label.name = \"InteractionLabel\"
+		add_child(label)
+		interaction_label = label
+	
+	interaction_label.hide()
+
+func _on_body_entered(body):
+	if body.name == \"Player\":  
+		player_in_range = true
+		interaction_label.show()
+
+func _on_body_exited(body):
+	if body.name == \"Player\":  
+		player_in_range = false
+		interaction_label.hide()
+		
+		if dialog_started:
+			close_dialog()
+
+func _input(event):
+	if event.is_action_pressed(\"interact\") and player_in_range and not dialog_started:
+		start_dialog()
+
+func start_dialog():
+	dialog_started = true
+	interaction_label.hide()
+	
+	
+	var dialog_box = get_tree().get_first_node_in_group(\"dialog_box\")
+	if not dialog_box:
+		var dialog_scene = load(\"res://textbox.tscn\")
+		dialog_box = dialog_scene.instantiate()
+		get_tree().current_scene.add_child(dialog_box)
+		dialog_box.add_to_group(\"dialog_box\")
+	
+	
+	dialog_box.text_queue.clear()
+	for line in dialog_lines:
+		dialog_box.queue_text(line)
+	
+	dialog_box.show_textbox()
+
+func close_dialog():
+	dialog_started = false
+	if player_in_range:
+		interaction_label.show()
+	
+	var dialog_box = get_tree().get_first_node_in_group(\"dialog_box\")
+	if dialog_box:
+		dialog_box.hide_textbox()
+"
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_nokgg"]
+radius = 21.023796
+
+[node name="npc" type="CharacterBody2D"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CapsuleShape2D_nokgg")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+position = Vector2(-1, -5)
+scale = Vector2(0.045885418, 0.068454824)
+sprite_frames = SubResource("SpriteFrames_ubaqv")
+animation = &"idle"
+
+[node name="Area2D" type="Area2D" parent="."]
+script = SubResource("GDScript_dy6sc")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+shape = SubResource("CircleShape2D_nokgg")
+
+[connection signal="body_entered" from="Area2D" to="Area2D" method="_on_body_entered"]
+[connection signal="body_exited" from="Area2D" to="Area2D" method="_on_body_exited"]

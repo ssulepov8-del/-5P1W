@@ -1,0 +1,159 @@
+[gd_scene load_steps=4 format=3 uid="uid://2wvvpjsvcx8x"]
+
+[sub_resource type="GDScript" id="GDScript_us7u2"]
+script/source = "extends CanvasLayer
+
+const CHAR_READ_RATE = 0.05
+
+@onready var textbox_container = $MarginContainer
+@onready var start_symbol = $MarginContainer/MarginContainer/HBoxContainer/Start
+@onready var end_symbol = $MarginContainer/MarginContainer/HBoxContainer/End
+@onready var label = $MarginContainer/MarginContainer/HBoxContainer/Label
+
+enum State {
+	READY,
+	READING,
+	FINISHED
+}
+
+var current_state = State.READY
+var text_queue = []
+var current_tween: Tween
+
+func _ready():
+	print(\"Starting state: State.READY\")
+	hide_textbox()
+	queue_text(\"Я был за стойкой весь вечер с 6 до полуночи\")
+	queue_text(\"Заказы видели все\")
+	queue_text(\"Никакого отношения к девочке я не имею\")
+	queue_text(\"До свидания\")
+
+func _process(_delta):
+	match current_state:
+		State.READY:
+			if !text_queue.is_empty():
+				display_text()
+		State.READING:
+			if Input.is_action_just_pressed(\"ui_accept\"):
+				if current_tween:
+					current_tween.kill()
+				label.visible_ratio = 1.0
+				end_symbol.text = \"v\"
+				change_state(State.FINISHED)
+		State.FINISHED:
+			if Input.is_action_just_pressed(\"ui_accept\"):
+				change_state(State.READY)
+				hide_textbox()
+
+func queue_text(next_text):
+	text_queue.push_back(next_text)
+
+func hide_textbox():
+	start_symbol.text = \"\"
+	end_symbol.text = \"\"
+	label.text = \"\"
+	label.visible_ratio = 0.0
+	textbox_container.hide()
+	if current_tween:
+		current_tween.kill()
+		current_tween = null
+
+func show_textbox():
+	start_symbol.text = \"*\"
+	textbox_container.show()
+
+func display_text():
+	var next_text = text_queue.pop_front()
+	label.text = next_text
+	label.visible_ratio = 0.0
+	change_state(State.READING)
+	show_textbox()
+	
+	
+	current_tween = create_tween()
+	current_tween.tween_property(label, \"visible_ratio\", 1.0, len(next_text) * CHAR_READ_RATE)
+	current_tween.finished.connect(_on_tween_finished)
+
+func change_state(next_state):
+	current_state = next_state
+	match current_state:
+		State.READY:
+			print(\"Changing state to: State.READY\")
+		State.READING:
+			print(\"Changing state to: State.READING\")
+		State.FINISHED:
+			print(\"Changing state to: State.FINISHED\")
+
+func _on_tween_finished():
+	end_symbol.text = \"v\"
+	change_state(State.FINISHED)
+"
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_us7u2"]
+bg_color = Color(0, 0, 0, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(1, 1, 1, 1)
+
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_us7u2"]
+
+[node name="textbox" type="CanvasLayer"]
+script = SubResource("GDScript_us7u2")
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 9.0
+offset_top = -252.0
+offset_right = 9.0
+offset_bottom = 3.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 67
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 16
+
+[node name="Panel" type="Panel" parent="MarginContainer"]
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_us7u2")
+
+[node name="MarginContainer" type="MarginContainer" parent="MarginContainer"]
+layout_mode = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="Panel" type="Panel" parent="MarginContainer/MarginContainer"]
+visible = false
+material = SubResource("CanvasItemMaterial_us7u2")
+layout_mode = 2
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer/MarginContainer"]
+layout_mode = 2
+
+[node name="Start" type="Label" parent="MarginContainer/MarginContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 0
+theme_override_font_sizes/font_size = 61
+text = "*"
+
+[node name="Label" type="Label" parent="MarginContainer/MarginContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 1
+theme_override_font_sizes/font_size = 43
+text = "text!пррмрмпрмрпилоипм"
+autowrap_mode = 3
+clip_text = true
+
+[node name="End" type="Label" parent="MarginContainer/MarginContainer/HBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 8
+theme_override_font_sizes/font_size = 61
+text = "v"

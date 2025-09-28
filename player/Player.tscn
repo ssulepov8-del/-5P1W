@@ -1,0 +1,49 @@
+[gd_scene load_steps=6 format=3 uid="uid://cm4ruskwiip3m"]
+
+[ext_resource type="Script" uid="uid://dyw5chdlmewpt" path="res://player/player.gd" id="1_3c3w1"]
+[ext_resource type="Texture2D" uid="uid://kb4ghlwpf2he" path="res://photo_5366215496803941459_y (1)-no-bg-preview (carve.photos).png" id="2_wnvi2"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_ehsmr"]
+radius = 8.0
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_ulp21"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_wnvi2")
+}],
+"loop": true,
+"name": &"default",
+"speed": 5.0
+}]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_3c3w1"]
+radius = 32.0
+
+[node name="Player" type="CharacterBody2D"]
+script = ExtResource("1_3c3w1")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CapsuleShape2D_ehsmr")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+position = Vector2(-1.9073486e-06, -1.9999996)
+scale = Vector2(0.05800781, 0.047569446)
+sprite_frames = SubResource("SpriteFrames_ulp21")
+
+[node name="Camera2D" type="Camera2D" parent="."]
+zoom = Vector2(4.5, 4.5)
+process_callback = 0
+limit_left = 1
+limit_right = 990
+limit_bottom = 420
+position_smoothing_enabled = true
+drag_horizontal_enabled = true
+
+[node name="Area2D" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+shape = SubResource("CircleShape2D_3c3w1")
+
+[connection signal="body_entered" from="Area2D" to="." method="_on_area_2d_body_entered"]
+[connection signal="body_exited" from="Area2D" to="." method="_on_area_2d_body_exited"]

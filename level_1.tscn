@@ -1,0 +1,63 @@
+[gd_scene load_steps=8 format=3 uid="uid://ywg8ooo2mbx8"]
+
+[ext_resource type="Texture2D" uid="uid://bg8jhsep0qsa8" path="res://Асфальт.png" id="1_3hls8"]
+[ext_resource type="PackedScene" uid="uid://bvs504so0kx2b" path="res://pause_menu.tscn" id="1_ihfcg"]
+[ext_resource type="PackedScene" uid="uid://cm4ruskwiip3m" path="res://player/Player.tscn" id="2_hbghi"]
+[ext_resource type="PackedScene" uid="uid://cco6c1somi3xv" path="res://mob.tscn" id="3_hn12h"]
+[ext_resource type="Texture2D" uid="uid://b28margyup1fe" path="res://photo_5386396555990399276_x.jpg" id="4_rka8t"]
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_hbghi"]
+texture = ExtResource("1_3hls8")
+50:34/0 = 0
+51:34/0 = 0
+51:34/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
+52:34/0 = 0
+52:34/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
+53:34/0 = 0
+53:34/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
+54:34/0 = 0
+54:34/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
+55:34/0 = 0
+55:34/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
+56:34/0 = 0
+56:34/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
+57:34/0 = 0
+57:34/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
+58:34/0 = 0
+51:35/0 = 0
+52:35/0 = 0
+53:35/0 = 0
+54:35/0 = 0
+55:35/0 = 0
+56:35/0 = 0
+57:35/0 = 0
+58:35/0 = 0
+
+[sub_resource type="TileSet" id="TileSet_hn12h"]
+physics_layer_0/collision_layer = 1
+sources/0 = SubResource("TileSetAtlasSource_hbghi")
+
+[node name="Level1" type="Node2D"]
+
+[node name="Photo5386396555990399276X" type="Sprite2D" parent="."]
+position = Vector2(503.99997, 222.875)
+scale = Vector2(1.6979165, 1.3631499)
+texture = ExtResource("4_rka8t")
+
+[node name="CanvasLayer" parent="Photo5386396555990399276X" instance=ExtResource("1_ihfcg")]
+
+[node name="TileMap" type="TileMap" parent="."]
+tile_set = SubResource("TileSet_hn12h")
+format = 2
+layer_0/tile_data = PackedInt32Array(1703936, 3342336, 34, 1703937, 3407872, 34, 1703938, 3473408, 34, 1703939, 3538944, 34, 1703940, 3604480, 34, 1703941, 3670016, 34, 1703942, 3735552, 34, 1703943, 3342336, 34, 1703944, 3407872, 34, 1703945, 3473408, 34, 1703946, 3538944, 34, 1703947, 3604480, 34, 1703948, 3670016, 34, 1703949, 3735552, 34, 1703950, 3342336, 34, 1703951, 3407872, 34, 1703952, 3473408, 34, 1703953, 3538944, 34, 1703954, 3604480, 34, 1703955, 3670016, 34, 1703956, 3735552, 34, 1703957, 3342336, 34, 1703958, 3407872, 34, 1703959, 3473408, 34, 1703960, 3538944, 34, 1703961, 3604480, 34, 1703962, 3670016, 34, 1703963, 3735552, 34, 1703964, 3342336, 34, 1703965, 3407872, 34, 1703966, 3473408, 34, 1703967, 3538944, 34, 1703968, 3604480, 34, 1703969, 3670016, 34, 1703970, 3735552, 34, 1703971, 3342336, 34, 1703972, 3407872, 34, 1703973, 3473408, 34, 1703974, 3538944, 34, 1703975, 3604480, 34, 1703976, 3670016, 34, 1703977, 3735552, 34, 1703978, 3342336, 34, 1703979, 3407872, 34, 1703980, 3473408, 34, 1703981, 3538944, 34, 1703982, 3604480, 34, 1703983, 3670016, 34, 1703984, 3735552, 34, 1703985, 3342336, 34, 1703986, 3407872, 34, 1703987, 3473408, 34, 1703988, 3538944, 34, 1703989, 3604480, 34, 1703990, 3670016, 34, 1703991, 3735552, 34, 1703992, 3342336, 34, 1703993, 3407872, 34, 1703994, 3473408, 34, 1703995, 3538944, 34, 1703996, 3604480, 34, 1703997, 3670016, 34, 1703998, 3735552, 34, 1638400, 3342336, 34, 1572864, 3342336, 34, 1507328, 3342336, 34, 1441792, 3342336, 34, 1376256, 3342336, 34, 1310720, 3342336, 34, 1245184, 3342336, 34, 1638462, 3342336, 34, 1572926, 3342336, 34, 1507390, 3342336, 34, 1441854, 3342336, 34, 1376318, 3342336, 34, 1310782, 3342336, 34, 1245246, 3342336, 34, 1179710, 3342336, 34)
+
+[node name="Player" type="Node2D" parent="."]
+
+[node name="Player" parent="Player" instance=ExtResource("2_hbghi")]
+position = Vector2(190, 403)
+
+[node name="npc" type="Node2D" parent="."]
+position = Vector2(342, 370)
+
+[node name="npc" parent="npc" instance=ExtResource("3_hn12h")]
+position = Vector2(-92, 33)

@@ -1,0 +1,130 @@
+[gd_scene load_steps=3 format=3 uid="uid://bvs504so0kx2b"]
+
+[ext_resource type="FontFile" uid="uid://lhqvmrtrfep0" path="res://Шрифты/minecraft_0.ttf" id="1_hdmo1"]
+
+[sub_resource type="GDScript" id="GDScript_wyi4u"]
+script/source = "extends CanvasLayer
+
+@onready var pause_panel = $ColorRect
+
+var is_paused = false
+
+func _ready():
+	# Устанавливаем правильный процесс mode для обработки ввода на паузе
+	process_mode = Node.PROCESS_MODE_ALWAYS
+	
+	if pause_panel:
+		pause_panel.hide()
+	
+	# Находим и подключаем кнопки
+	connect_buttons()
+
+func connect_buttons():
+	# Находим кнопки по путям
+	var continue_btn = get_node_or_null(\"ColorRect/VBoxContainer/Button\")
+	var restart_btn = get_node_or_null(\"ColorRect/VBoxContainer/Button2\")
+	var menu_btn = get_node_or_null(\"ColorRect/VBoxContainer/Button3\")
+	
+	if continue_btn:
+		continue_btn.pressed.connect(_on_continue_pressed)
+	else:
+		print(\"Continue button not found\")
+	
+	if restart_btn:
+		restart_btn.pressed.connect(_on_restart_pressed)
+	else:
+		print(\"Restart button not found\")
+	
+	if menu_btn:
+		menu_btn.pressed.connect(_on_main_menu_pressed)
+	else:
+		print(\"Menu button not found\")
+
+func _input(event):
+	if event.is_action_pressed(\"pause\"):
+		print(\"ESC pressed\")
+		toggle_pause()
+
+func toggle_pause():
+	if is_paused:
+		unpause_game()
+	else:
+		pause_game()
+
+func pause_game():
+	is_paused = true
+	get_tree().paused = true
+	
+	if pause_panel:
+		pause_panel.show()
+		print(\"Pause menu shown\")
+	
+	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
+
+func unpause_game():
+	is_paused = false
+	get_tree().paused = false
+	
+	if pause_panel:
+		pause_panel.hide()
+		print(\"Pause menu hidden\")
+	
+	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
+
+func _on_continue_pressed():
+	print(\"Continue button pressed\")
+	unpause_game()
+
+func _on_restart_pressed():
+	print(\"Restart button pressed\")
+	get_tree().paused = false
+	get_tree().reload_current_scene()
+
+func _on_main_menu_pressed():
+	print(\"Exit button pressed\")
+	get_tree().quit()  # Выход из игры
+"
+
+[node name="CanvasLayer" type="CanvasLayer"]
+script = SubResource("GDScript_wyi4u")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+offset_left = 7.0
+offset_top = 8.0
+offset_right = 1929.0
+offset_bottom = 1082.0
+color = Color(0.56078434, 0.56078434, 0.56078434, 0)
+
+[node name="VBoxContainer" type="VBoxContainer" parent="ColorRect"]
+layout_mode = 0
+offset_left = -5.0
+offset_top = -4.0
+offset_right = 1908.0
+offset_bottom = 1068.0
+
+[node name="Label" type="Label" parent="ColorRect/VBoxContainer"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("1_hdmo1")
+theme_override_font_sizes/font_size = 101
+text = "Pause"
+horizontal_alignment = 1
+
+[node name="Button" type="Button" parent="ColorRect/VBoxContainer"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("1_hdmo1")
+theme_override_font_sizes/font_size = 101
+text = "Resume"
+
+[node name="Button2" type="Button" parent="ColorRect/VBoxContainer"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("1_hdmo1")
+theme_override_font_sizes/font_size = 101
+text = "Settings"
+
+[node name="Button3" type="Button" parent="ColorRect/VBoxContainer"]
+layout_mode = 2
+theme_override_fonts/font = ExtResource("1_hdmo1")
+theme_override_font_sizes/font_size = 101
+text = "Quit"
+
+[connection signal="pressed" from="ColorRect/VBoxContainer/Button" to="." method="_on_button_pressed"]
